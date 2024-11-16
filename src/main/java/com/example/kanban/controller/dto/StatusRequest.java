@@ -1,4 +1,4 @@
-package com.example.kanban.controller;
+package com.example.kanban.controller.dto;
 
 import com.example.kanban.model.enums.StatusTarefa;
 import lombok.AllArgsConstructor;
