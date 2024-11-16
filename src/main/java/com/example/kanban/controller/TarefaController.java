@@ -1,6 +1,7 @@
 package com.example.kanban.controller;
 
 import com.example.kanban.model.Tarefa;
+import com.example.kanban.model.enums.StatusTarefa;
 import com.example.kanban.service.TarefaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +41,8 @@ public class TarefaController {
     }
 
     @PatchMapping("/{id}/move")
-    public Tarefa mudarDeStatus(@RequestBody Tarefa tarefa, @PathVariable("id") Long id) {
-        return this.service.mudarDeStatus(id, tarefa);
+    public Tarefa mudarDeStatus(@RequestBody StatusRequest novoStatus, @PathVariable("id") Long id) {
+        return this.service.mudarDeStatus(id, novoStatus.getStatus());
     }
 
     @PutMapping("/{id}")

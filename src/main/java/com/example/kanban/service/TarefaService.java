@@ -27,23 +27,26 @@ public class TarefaService {
     }
 
     public List<Tarefa> listarPorStatus() {
-        return this.repository.listarPorStatus();
+        List<Tarefa> tarefaList = this.repository.listarPorStatus();
+        return tarefaList;
     }
 
-    public Tarefa mudarDeStatus(Long id, Tarefa tarefa) {
+    public Tarefa mudarDeStatus(Long id, StatusTarefa novoStatus) {
         Tarefa tarefaDomain = consultarPorId(id);
         boolean alterar = false;
 
-        if(tarefa.getStatus().equals(StatusTarefa.A_FAZER)
+        if(novoStatus.equals(StatusTarefa.A_FAZER)
             && tarefaDomain.getStatus().equals(StatusTarefa.EM_PROGRESSO)) {
             alterar = true;
-        } else if (tarefa.getStatus().equals(StatusTarefa.CONCLUIDO)
+        } else if (novoStatus.equals(StatusTarefa.CONCLUIDO)
                 && tarefaDomain.getStatus().equals(StatusTarefa.EM_PROGRESSO)){
+            alterar = true;
+        } else if (tarefaDomain.getStatus().equals(StatusTarefa.A_FAZER)) {
             alterar = true;
         }
 
         if(alterar){
-            tarefaDomain.setStatus(tarefa.getStatus());
+            tarefaDomain.setStatus(novoStatus);
         }
 
         return this.repository.save(tarefaDomain);
@@ -76,18 +79,15 @@ public class TarefaService {
     }
 
     public List<Tarefa> consultarPorPrioridadeDataLimite() {
-        List<Tarefa> tarefas = new ArrayList<>();
-        tarefas = this.repository.listarPorPrioridadeDataLimite();
-        return tarefas;
+        return this.repository.listarPorPrioridadeDataLimite();
     }
 
     public List<Tarefa> getRelatorio() {
-        List<Tarefa> tarefas = new ArrayList<>();
-        tarefas = this.repository.listarPorStatus();
+        List<Tarefa> tarefas = this.repository.listarPorStatus();
 
         return tarefas.stream().filter(tarefa ->
            tarefa.getDataLimite().isBefore(LocalDate.now())
-                   && tarefa.getStatus().equals(StatusTarefa.CONCLUIDO
-        )).toList();
+                   && !tarefa.getStatus().equals(StatusTarefa.CONCLUIDO)
+        ).toList();
     }
 }
