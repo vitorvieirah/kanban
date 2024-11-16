@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,9 +86,11 @@ public class TarefaService {
     public List<Tarefa> getRelatorio() {
         List<Tarefa> tarefas = this.repository.listarPorStatus();
 
-        return tarefas.stream().filter(tarefa ->
-           tarefa.getDataLimite().isBefore(LocalDate.now())
-                   && !tarefa.getStatus().equals(StatusTarefa.CONCLUIDO)
-        ).toList();
+        return tarefas.stream()
+                .sorted(Comparator
+                        .comparing(Tarefa::getDataLimite)
+                        .thenComparing(tarefa -> tarefa.getStatus().equals(StatusTarefa.CONCLUIDO))
+                )
+                .toList();
     }
 }
