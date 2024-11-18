@@ -40,7 +40,7 @@ public class TarefaController {
         return this.service.getRelatorio();
     }
 
-    @PatchMapping("/{id}/move")
+    @PutMapping("/{id}/move")
     public Tarefa mudarDeStatus(@RequestBody StatusRequest novoStatus, @PathVariable("id") Long id) {
         return this.service.mudarDeStatus(id, novoStatus.getStatus());
     }
